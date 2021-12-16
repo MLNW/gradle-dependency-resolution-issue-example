@@ -1,0 +1,30 @@
+plugins {
+    id("java-common-conventions")
+    id("org.springframework.boot")
+    id("io.spring.dependency-management")
+}
+
+dependencies {
+    implementation("org.springframework.boot:spring-boot-starter-webflux")
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("io.projectreactor:reactor-test")
+}
+
+task classesJar(type: Jar, dependsOn: classes) {
+    archiveClassifier = "classes"
+    from sourceSets.main.output
+    include "**/*.class"
+}
+
+assemble.dependsOn(classesJar)
+
+configurations {
+    classesJars {
+        canBeConsumed = true
+        canBeResolved = false
+    }
+}
+
+artifacts {
+    classesJars(classesJar)
+}
