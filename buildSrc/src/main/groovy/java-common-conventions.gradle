@@ -1,11 +1,15 @@
 plugins {
     id("java")
+    id("org.springframework.boot") apply false
+    id("io.spring.dependency-management")
 }
 
 dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-api")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
 }
+
+bootJar.enabled = false
 
 sourceCompatibility = JavaVersion.VERSION_11
 targetCompatibility = JavaVersion.VERSION_11
@@ -17,4 +21,23 @@ tasks.withType(JavaCompile).configureEach {
 
 test {
     useJUnitPlatform()
+}
+
+task classesJar(type: Jar, dependsOn: classes) {
+    archiveClassifier = "classes"
+    from sourceSets.main.output
+    include "**/*.class"
+}
+
+assemble.dependsOn(classesJar)
+
+configurations {
+    classesJars {
+        canBeConsumed = true
+        canBeResolved = false
+    }
+}
+
+artifacts {
+    classesJars(classesJar)
 }

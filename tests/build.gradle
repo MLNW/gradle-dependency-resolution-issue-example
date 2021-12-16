@@ -1,0 +1,15 @@
+plugins {
+    id("java-common-conventions")
+}
+
+dependencies {
+    testImplementation("com.tngtech.archunit:archunit-junit5:0.22.0")
+
+    testRuntimeOnly('org.springframework.boot:spring-boot-starter-logging') {
+        because("we don't want to configure logging ourselves.")
+    }
+
+    testRuntimeOnly(project(path: ":service-a:impl:backend", configuration: "classesJars"))
+    testRuntimeOnly(project(path: ":service-b:impl:backend", configuration: "classesJars"))
+    testRuntimeOnly(project(path: ":service-c:impl:backend", configuration: "classesJars"))
+}
